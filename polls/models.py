@@ -41,6 +41,7 @@ class Answer(models.Model): # Модель для хранения ответо�
     text = models.TextField(help_text='Текст ответа')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='answers', help_text='Владелец')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers', help_text='Вопрос')
+    vote_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.text

@@ -116,5 +116,11 @@ class DestroyOption(DestroyAPIView):
 class VoteForOption(APIView):
     def post(self, request):
         question = get_object_or_404(Question, pk=request.query_params.pk)
-        new_answer = Answer(question=question, text=request.POST.text, user=user)
-        new_answer.save()
+        if question.type == 'TEXT':
+            new_answer = Answer(question=question, text=request.POST.text, owner_id=request.POST.owner_id)
+            new_answer.full_clean() # Валидируем
+            new_answer.save()
+        if question.type == 'ONE' or question.type == 'MANY':
+            new_answer = Answer(question=question, options=request.POST.options, owner_id=request.POST.owner_id)
+            new_answer.full_clean() # Валидируем
+            new_answer.save()

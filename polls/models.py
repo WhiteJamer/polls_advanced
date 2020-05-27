@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 class Poll(models.Model):
     name = models.CharField(max_length=255, help_text='Название')
@@ -39,11 +40,32 @@ class Option(models.Model): # Вариант ответа
 
 class Answer(models.Model): # Модель для хранения ответов пользователей
     text = models.TextField(help_text='Текст ответа')
+    options = models.ManyToManyField(Option, related_name='answers', help_text='Выбранные варианты')
     owner_id = models.IntegerField(help_text='Уникальный ID владельца')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers', help_text='Вопрос')
     vote_date = models.DateTimeField(auto_now_add=True, help_text='Дата ответа')
 
+    def clean(self):
+
+        if self.question.type == 'TEXT':
+            if self.text is None:
+                raise ValidationError('Поле текст не должно быть пустым, если тип вопроса TEXT')
+            if self.options is not None:
+                raise ValidationError('Нельзя выбрать варианты ответа, если тип вопроса TEXT')
+
+        if self.question.type == 'ONE' or self.question.type == 'MANY':
+            if self.text is not None:
+                raise ValidationError('Невозможно написать текст, если тип вопроса ONE или MANY')
+            if self.options is None:
+                raise ValidationError('Нужно выбрать как минимум один вариант ответа, когда тип вопроса ONE или MANY')
+
     def __str__(self):
-        return self.text
+
+        if self.question.type == 'TEXT':
+            return self.text
+
+        if self.question.type == 'ONE' or self.question.type == 'MANY':
+            return self.options
+
 
 

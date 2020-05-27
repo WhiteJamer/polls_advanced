@@ -1,5 +1,20 @@
 from rest_framework import serializers
-from .models import Poll, Question
+from .models import Poll, Question, Option
+
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
+        fields = '__all__'
+
+class OptionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
+        fields = '__all__'
+
+class OptionUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
+        fields = '__all__'
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:

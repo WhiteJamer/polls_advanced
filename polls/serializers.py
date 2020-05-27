@@ -49,6 +49,7 @@ class PollUpdateSerializer(serializers.ModelSerializer):
         exclude = ('start_date',) # доступны для изменения все поля кроме start_date
 
 class AnswerSerializer(serializers.ModelSerializer):
+    options = OptionSerializer(many=True)
     class Meta:
         model = Answer
         fields = '__all__'

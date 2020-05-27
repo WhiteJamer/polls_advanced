@@ -17,6 +17,7 @@ class OptionUpdateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class QuestionSerializer(serializers.ModelSerializer):
+    options = OptionSerializer(many=True)
     class Meta:
         model = Question
         fields = '__all__'
@@ -35,8 +36,7 @@ class PollSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True)
     class Meta:
         model = Poll
-        fields = ('id', 'name', 'start_date', 'end_date',
-                  'description', 'is_active', 'questions')
+        fields = '__all__'
 
 class PollCreateSerializer(serializers.ModelSerializer):
     class Meta:

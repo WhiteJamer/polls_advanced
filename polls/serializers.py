@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Poll, Question, Option
+from .models import Poll, Question, Option, Answer
 
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,5 +47,10 @@ class PollUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Poll
         exclude = ('start_date',) # доступны для изменения все поля кроме start_date
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = '__all__'
 
 

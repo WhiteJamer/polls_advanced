@@ -50,6 +50,7 @@ class PollUpdateSerializer(serializers.ModelSerializer):
 
 class AnswerSerializer(serializers.ModelSerializer):
     options = OptionSerializer(many=True)
+    question = QuestionSerializer()
     class Meta:
         model = Answer
         fields = '__all__'

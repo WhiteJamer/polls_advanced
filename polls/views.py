@@ -156,3 +156,9 @@ class VoteForOption(APIView):
             except:
                     new_answer.delete()
                     return Response({'message': 'Произошла ошибка'}, status=status.HTTP_400_BAD_REQUEST)
+
+class PersonalAnswersList(APIView):
+    def get(self, request, owner_id):
+        answers = Answer.objects.filter(owner_id=owner_id)
+        serializer= AnswerSerializer(answers, many=True)
+        return Response({'answers': serializer.data}, status=status.HTTP_200_OK)

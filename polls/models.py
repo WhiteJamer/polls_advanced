@@ -39,9 +39,9 @@ class Option(models.Model): # Вариант ответа
 
 class Answer(models.Model): # Модель для хранения ответов пользователей
     text = models.TextField(help_text='Текст ответа')
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='answers', help_text='Владелец')
+    owner_id = models.IntegerField(help_text='Уникальный ID владельца')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers', help_text='Вопрос')
-    vote_date = models.DateTimeField(auto_now_add=True)
+    vote_date = models.DateTimeField(auto_now_add=True, help_text='Дата ответа')
 
     def __str__(self):
         return self.text

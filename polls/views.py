@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import \
@@ -8,7 +9,7 @@ from rest_framework.generics import \
     RetrieveAPIView,\
     ListAPIView
 from rest_framework import permissions
-from .models import Poll, Question, Option
+from .models import Poll, Question, Option, Answer
 from .serializers import \
     PollCreateSerializer,\
     PollUpdateSerializer, \
@@ -112,4 +113,8 @@ class DestroyOption(DestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
     queryset = Option.objects.all()
 
-
+class VoteForOption(APIView):
+    def post(self, request):
+        question = get_object_or_404(Question, pk=request.query_params.pk)
+        new_answer = Answer(question=question, text=request.POST.text, user=user)
+        new_answer.save()

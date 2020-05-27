@@ -21,4 +21,5 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('polls/', include('polls.pollsurls')),
     path('questions/', include('polls.questionurls')),
+    path('options/', include('polls.optionsurls')),
 ]

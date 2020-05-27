@@ -39,8 +39,8 @@ class Option(models.Model): # Вариант ответа
         return self.text
 
 class Answer(models.Model): # Модель для хранения ответов пользователей
-    text = models.TextField(help_text='Текст ответа')
-    options = models.ManyToManyField(Option, related_name='answers', help_text='Выбранные варианты')
+    text = models.TextField(help_text='Текст ответа', blank=True, null=True)
+    options = models.ManyToManyField(Option, related_name='answers', help_text='Выбранные варианты', blank=True, null=True)
     owner_id = models.IntegerField(help_text='Уникальный ID владельца')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers', help_text='Вопрос')
     vote_date = models.DateTimeField(auto_now_add=True, help_text='Дата ответа')
@@ -65,7 +65,7 @@ class Answer(models.Model): # Модель для хранения ответо�
             return self.text
 
         if self.question.type == 'ONE' or self.question.type == 'MANY':
-            return self.options
+            return f'Ответов {self.options.count()}' # fix
 
 
 

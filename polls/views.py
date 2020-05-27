@@ -129,18 +129,30 @@ class ListAnswer(ListAPIView):
 class VoteForOption(APIView):
     def post(self, request, pk):
         question = get_object_or_404(Question, pk=pk)
+
         if question.type == 'TEXT':
             new_answer = Answer(question=question, text=request.POST.text, owner_id=request.POST.owner_id)
             new_answer.full_clean() # Валидируем
             new_answer.save()
-            return new_answer
+            return Response({'message': 'Ответ отправлен', 'answer': new_answer}, status=status.HTTP_200_OK)
+
         if question.type == 'ONE' or question.type == 'MANY':
             new_answer = Answer(question=question, owner_id=request.POST['owner_id'])
             new_answer.save()
             try:
-                new_answer.options.add(request.POST['options'])
+
+                for option in request.POST.getlist('options'):
+                    new_answer.options.add(option)
+
+                print(new_answer)
+                print('')
                 new_answer.full_clean()  # Валидируем
-                new_answer.bulk_create()
-                return new_answer
+
+                new_answer.save()
+                print('')
+                print('valid')
+                print('')
+                return Response({'message': 'Ответ отправлен'}, status=status.HTTP_200_OK)
             except:
                     new_answer.delete()
+                    return Response({'message': 'Произошла ошибка'}, status=status.HTTP_400_BAD_REQUEST)
